@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shared Iframe</title>
+</head>
+<body>
+    <script>
+        // Listen for messages from other tabs
+        window.addEventListener('message', (event) => {
+            // You may want to validate the origin here
+            console.log('Received message:', event.data);
+            // Send a response back to the sender
+            event.source.postMessage('Response from shared iframe', event.origin);
+        });
+    </script>
+</body>
+</html>
