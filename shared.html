@@ -6,12 +6,23 @@
 </head>
 <body>
     <script>
-        // Listen for messages from other tabs
+        let senderWindow = null;
+        let receiverWindow = null;
+        // Listen for messages from the sender and receiver tabs
         window.addEventListener('message', (event) => {
-            // You may want to validate the origin here
             console.log('Received message:', event.data);
-            // Send a response back to the sender
-            event.source.postMessage('Response from shared iframe', event.origin);
+            // Register sender and receiver
+            if (event.data.type === 'register') {
+                if (event.data.role === 'sender') {
+                    senderWindow = event.source;
+                } else if (event.data.role === 'receiver') {
+                    receiverWindow = event.source;
+                }
+            }
+            // Relay messages from sender to receiver
+            else if (event.data.type === 'message' && receiverWindow) {
+                receiverWindow.postMessage({ type: 'message', content: event.data.content }, event.origin);
+            }
         });
     </script>
 </body>
